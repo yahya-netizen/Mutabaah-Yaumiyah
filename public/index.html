@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Mutabaah Yaumiyah - LDK KISI UNSIL 2026</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ============================================================
+       ROOT & RESET
+    ============================================================ */
+    :root {
+      --green-dark: #0d3320;
+      --green-mid: #1a4a2e;
+      --green-light: #2d7a4f;
+      --green-pale: #eaf5ef;
+      --red: #b91c1c;
+      --red-light: #fef2f2;
+      --gold: #c8a84b;
+      --gold-light: #f0d98a;
+      --white: #ffffff;
+      --black: #111827;
+      --gray: #6b7280;
+      --gray-light: #f3f4f6;
+      --border: #d1fae5;
+      --shadow: 0 4px 24px rgba(13, 51, 32, .13);
+      --shadow-lg: 0 8px 40px rgba(13, 51, 32, .18);
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--green-pale);
+      color: var(--black);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ============================================================
+       ISLAMIC GEOMETRIC BACKGROUND
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(45, 122, 79, .07) 0, transparent 55%),
+        radial-gradient(circle at 85% 85%, rgba(13, 51, 32, .07) 0, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%232d7a4f' stroke-width='.45' opacity='.18'%3E%3Cpolygon points='40,4 76,22 76,58 40,76 4,58 4,22'/%3E%3Ccircle cx='40' cy='40' r='14'/%3E%3Cline x1='40' y1='4' x2='40' y2='76'/%3E%3Cline x1='4' y1='40' x2='76' y2='40'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       PALESTINE FLAG STRIPE (top)
+    ============================================================ */
+    .flag-stripe {
+      width: 100%;
+      height: 6px;
+      display: flex;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .flag-stripe .s1 { flex: 1; background: var(--black); }
+    .flag-stripe .s2 { flex: 1; background: white; }
+    .flag-stripe .s3 { flex: 1; background: var(--green-mid); }
+    .flag-stripe .triangle {
+      width: 0; height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 14px solid var(--red);
+      position: absolute; left: 0; top: -1.5px;
+    }
+
+    /* ============================================================
+       HEADER
+    ============================================================ */
+    .site-header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 70%, var(--green-light) 100%);
+      position: relative;
+      overflow: hidden;
+      padding: clamp(16px, 3vw, 28px) clamp(16px, 4vw, 40px);
+    }
+
+    .site-header::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='white' stroke-width='.4' opacity='.07'%3E%3Crect x='10' y='10' width='40' height='40' rx='4'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Cline x1='10' y1='30' x2='50' y2='30'/%3E%3Cline x1='30' y1='10' x2='30' y2='50'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .site-header::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+    }
+
+    .header-inner {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      gap: clamp(10px, 2vw, 20px);
+      max-width: 700px; margin: 0 auto;
+    }
+
+    .header-logo {
+      width: clamp(48px, 8vw, 70px);
+      height: clamp(48px, 8vw, 70px);
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 0 4px rgba(200, 168, 75, .2);
+      flex-shrink: 0;
+    }
+
+    .header-text { text-align: center; }
+
+    .header-text .org {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+      line-height: 1.1;
+    }
+
+    .header-text .sub {
+      font-size: clamp(.68rem, 1.8vw, .82rem);
+      color: var(--gold-light);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .header-text .arabic {
+      font-family: 'Amiri', serif;
+      font-size: clamp(.7rem, 1.6vw, .82rem);
+      color: rgba(255, 255, 255, .5);
+      letter-spacing: 3px;
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* ============================================================
+       MAIN LAYOUT
+    ============================================================ */
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: clamp(12px, 3vw, 24px) clamp(12px, 3vw, 20px) 0;
+      display: flex; flex-direction: column; gap: 0;
+      flex: 1; width: 100%;
+    }
+
+    /* ============================================================
+       STEP INDICATOR
+    ============================================================ */
+    .step-indicator {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0;
+      margin: clamp(12px, 2vw, 20px) 0 clamp(10px, 2vw, 16px);
+    }
+
+    .step-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; font-weight: 700;
+      background: rgba(255, 255, 255, .7);
+      color: var(--gray);
+      border: 2px solid #d1d5db;
+      transition: all .35s ease;
+      position: relative; z-index: 1;
+    }
+
+    .step-dot.active {
+      background: var(--green-mid); color: white; border-color: var(--green-mid);
+      box-shadow: 0 0 0 4px rgba(45, 122, 79, .2);
+    }
+
+    .step-dot.done {
+      background: var(--gold); color: white; border-color: var(--gold);
+    }
+
+    .step-line {
+      flex: 1; height: 2px; background: #d1d5db; max-width: 60px;
+      transition: background .35s ease;
+    }
+
+    .step-line.done { background: var(--gold); }
+
+    /* ============================================================
+       CARDS
+    ============================================================ */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: slideUp .4s ease both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      padding: clamp(14px, 2.5vw, 20px) clamp(16px, 3vw, 24px);
+      position: relative; overflow: hidden;
+    }
+
+    .card-header::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .card-header h3 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--white); font-weight: 700;
+    }
+
+    .card-header p {
+      font-size: clamp(.7rem, 1.8vw, .8rem);
+      color: rgba(255, 255, 255, .65);
+      margin-top: 2px;
+    }
+
+    .card-body { padding: clamp(16px, 3vw, 24px); }
+
+    /* ============================================================
+       FORM ELEMENTS
+    ============================================================ */
+    .form-group { margin-bottom: clamp(12px, 2vw, 16px); }
+
+    .form-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: clamp(.75rem, 2vw, .82rem);
+      font-weight: 700;
+      color: var(--green-dark);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 6px;
+    }
+
+    .form-label .licon {
+      width: 20px; height: 20px;
+      background: var(--green-mid);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; flex-shrink: 0;
+    }
+
+    input[type=number], select, textarea {
+      width: 100%;
+      padding: clamp(10px, 2vw, 13px) clamp(12px, 2vw, 16px);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(.85rem, 2vw, .95rem);
+      color: #111827;
+      background: var(--green-pale);
+      transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+      outline: none;
+      opacity: 1;
+      -webkit-text-fill-color: #111827;
+    }
+
+    input[type=number]:hover, select:hover, textarea:hover {
+      border-color: var(--green-light);
+      background: white;
+      box-shadow: 0 3px 12px rgba(45, 122, 79, .1);
+    }
+
+    input[type=number]:focus, select:focus, textarea:focus {
+      border-color: var(--green-mid);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(45, 122, 79, .12), 0 3px 12px rgba(45, 122, 79, .08);
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a4a2e' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-color: var(--green-pale);
+      cursor: pointer;
+      color: #111827 !important;
+      -webkit-text-fill-color: #111827 !important;
+    }
+
+    select option { color: #111827; background-color: #ffffff; }
+
+    textarea { resize: vertical; min-height: 70px; }
+
+    /* ============================================================
+       GRID
+    ============================================================ */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(8px, 2vw, 12px); }
+
+    /* Ibadah section label */
+    .section-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: clamp(12px, 2vw, 18px) 0 clamp(8px, 1.5vw, 12px);
+    }
+
+    .section-divider span {
+      font-size: clamp(.72rem, 1.8vw, .8rem);
+      font-weight: 700; color: var(--green-mid);
+      text-transform: uppercase; letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .section-divider::before, .section-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    .section-divider::after {
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: clamp(12px, 2vw, 15px);
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(.9rem, 2.2vw, 1rem);
+      font-weight: 700; cursor: pointer;
+      transition: all .25s ease;
+      margin-top: clamp(10px, 2vw, 14px);
+      letter-spacing: .5px;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(13, 51, 32, .25);
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      opacity: 0; transition: opacity .25s ease;
+    }
+
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:hover { color: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(13, 51, 32, .3); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .btn-secondary {
+      background: transparent; color: var(--green-mid);
+      border: 2px solid var(--green-mid);
+    }
+
+    .btn-secondary:hover { background: var(--green-mid); color: white; transform: translateY(-2px); }
+
+    .btn:disabled { opacity: .65; cursor: not-allowed; transform: none !important; }
+    .btn:disabled::before { opacity: 0 !important; }
+
+    /* ============================================================
+       SUCCESS PAGE
+    ============================================================ */
+    .success-header {
+      background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      padding: clamp(24px, 4vw, 36px) 24px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+
+    .success-header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpolygon points='30,5 55,30 30,55 5,30' fill='none' stroke='white' stroke-width='.5' opacity='.08'/%3E%3C/svg%3E");
+    }
+
+    .check-ring {
+      width: clamp(56px, 10vw, 72px);
+      height: clamp(56px, 10vw, 72px);
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      background: rgba(255, 255, 255, .12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      margin: 0 auto clamp(10px, 2vw, 14px);
+      animation: pulse-ring 2.5s ease infinite;
+      position: relative; z-index: 1;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(200, 168, 75, .4); }
+      50%       { box-shadow: 0 0 0 14px rgba(200, 168, 75, 0); }
+    }
+
+    .success-header h2 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+      color: white; position: relative; z-index: 1;
+    }
+
+    .success-header p {
+      font-size: clamp(.75rem, 2vw, .88rem);
+      color: var(--gold-light); margin-top: 4px;
+      position: relative; z-index: 1; letter-spacing: 1px;
+    }
+
+    /* Quote box */
+    .quote-box {
+      background: #fff9e6;
+      border-left: 4px solid var(--gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: clamp(12px, 2.5vw, 18px) clamp(14px, 2.5vw, 20px);
+      margin-bottom: clamp(14px, 2.5vw, 20px);
+      font-family: 'Amiri', serif;
+      font-size: clamp(.95rem, 2.4vw, 1.08rem);
+      line-height: 1.9;
+      color: var(--green-dark);
+      position: relative;
+    }
+
+    .quote-box::before {
+      content: '"';
+      font-size: 4rem; line-height: .6;
+      color: var(--gold); opacity: .25;
+      position: absolute; top: 8px; left: 8px;
+      font-family: 'Amiri', serif;
+    }
+
+    /* ============================================================
+       CHART SECTION
+    ============================================================ */
+    .chart-section { margin-top: clamp(16px, 3vw, 24px); }
+
+    .chart-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(.95rem, 2.5vw, 1.1rem);
+      color: var(--green-dark); font-weight: 700;
+      text-align: center;
+      margin-bottom: clamp(10px, 2vw, 14px);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .chart-title::before, .chart-title::after { content: '✦'; color: var(--gold); font-size: .7rem; }
+
+    .chart-wrap {
+      background: var(--green-pale);
+      border-radius: var(--radius-sm);
+      padding: clamp(12px, 2vw, 16px);
+      border: 1px solid var(--border);
+      margin-bottom: clamp(10px, 2vw, 14px);
+      position: relative;
+    }
+
+    .chart-wrap canvas { max-height: 220px; }
+
+    /* Gemini analysis box */
+    .gemini-box {
+      background: linear-gradient(135deg, #f0fdf4, #e6f7ee);
+      border: 1.5px solid var(--green-light);
+      border-radius: var(--radius-sm);
+      padding: clamp(12px, 2.5vw, 18px);
+      margin-top: clamp(10px, 2vw, 14px);
+    }
+
+    .gemini-box .gemini-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .75rem; font-weight: 700;
+      color: var(--green-mid); text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+
+    .gemini-box .gemini-label .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green-light);
+      animation: blink 1.2s ease infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+
+    .gemini-box .gemini-text {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(.88rem, 2.2vw, .98rem);
+      color: var(--green-dark);
+      line-height: 1.85;
+      white-space: normal;
+    }
+
+    .gemini-box .gemini-text strong { color: var(--green-mid); font-weight: 700; }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, .35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text { color: var(--gold); font-size: .83rem; font-style: italic; margin-top: 6px; }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: var(--green-dark);
+      padding: clamp(14px, 2.5vw, 20px) 24px;
+      text-align: center;
+      margin-top: clamp(20px, 4vw, 32px);
+      width: 100%; position: relative; z-index: 1;
+    }
+
+    .site-footer .f-pattern {
+      color: var(--gold); font-size: .9rem; letter-spacing: 8px;
+      opacity: .6; display: block; margin-bottom: 8px;
+    }
+
+    .site-footer p { color: rgba(255, 255, 255, .65); font-size: clamp(.72rem, 1.8vw, .82rem); }
+    .site-footer strong { color: var(--gold-light); }
+
+    /* ============================================================
+       ORNAMENT DIVIDER
+    ============================================================ */
+    .ornament { text-align: center; color: var(--gold); letter-spacing: 10px; font-size: 1rem; opacity: .6; margin: 16px 0; }
+
+    /* ============================================================
+       PAGE VISIBILITY
+    ============================================================ */
+    #step2, #successPage { display: none; }
+
+    /* ============================================================
+       RESPONSIVE TWEAKS
+    ============================================================ */
+    @media (max-width: 380px) { .grid-2 { grid-template-columns: 1fr; } }
+    @media (min-width: 600px) { .page-wrap { padding-top: 28px; } }
+  </style>
+</head>
+
+<body>
+
+  <!-- Palestine flag stripe -->
+  <div class="flag-stripe">
+    <div class="s1"></div><div class="s2"></div><div class="s3"></div>
+    <div class="triangle"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="images.jpg" alt="KISI" class="header-logo" onerror="this.style.display='none'">
+      <div class="header-text">
+        <div class="org">LDK KISI UNSIL</div>
+        <span class="sub">Mutabaah Yaumiyah 2026</span>
+        <span class="arabic">بسم الله الرحمن الرحيم</span>
+      </div>
+      <img src="FT_UNSIL.jpg" alt="Unsil" class="header-logo" onerror="this.style.display='none'">
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="page-wrap">
+
+    <!-- STEP INDICATOR -->
+    <div class="step-indicator" id="stepIndicator">
+      <div class="step-dot active" id="dot1">١</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot" id="dot2">٢</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot" id="dot3">٣</div>
+    </div>
+
+    <!-- ============ STEP 1 ============ -->
+    <div id="step1" class="card">
+      <div class="card-header">
+        <h3>📋 Data Diri & Pekan</h3>
+        <p>Pilih bulan, pekan, dan nama kamu</p>
+      </div>
+      <div class="card-body">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🗓</span> Bulan</label>
+            <select id="bulan" onchange="loadNama()">
+              <option value="">⏳ Memuat bulan...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">📅</span> Pekan</label>
+            <select id="pekan" onchange="loadNama()">
+              <option value="1">Pekan 1</option>
+              <option value="2">Pekan 2</option>
+              <option value="3">Pekan 3</option>
+              <option value="4">Pekan 4</option>
+              <option value="5">Pekan 5</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="licon">👤</span> Nama Lengkap</label>
+          <select id="nama">
+            <option value="">⏳ Memuat nama...</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="nextStep()">
+          <span>Lanjut Isi Amalan</span> <span style="position:relative;z-index:1">➜</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ STEP 2 ============ -->
+    <div id="step2" class="card">
+      <div class="card-header">
+        <h3>🕌 Amalan Ibadah</h3>
+        <p>Isi dengan jujur — Allah Maha Mengetahui</p>
+      </div>
+      <div class="card-body">
+
+        <div class="section-divider"><span>Shalat Wajib</span></div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌅</span> Subuh</label>
+            <input type="number" id="subuh" placeholder="0–7" min="0" max="7">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">☀️</span> Dzuhur</label>
+            <input type="number" id="dzuhur" placeholder="0–7" min="0" max="7">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌤</span> Ashar</label>
+            <input type="number" id="ashar" placeholder="0–7" min="0" max="7">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌇</span> Magrib</label>
+            <input type="number" id="magrib" placeholder="0–7" min="0" max="7">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌙</span> Isya</label>
+            <input type="number" id="isya" placeholder="0–7" min="0" max="7">
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Sunnah & Amalan Lain</span></div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌠</span> Tahajjud</label>
+            <input type="number" id="tahajjud" placeholder="Rakaat" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌞</span> Dhuha</label>
+            <input type="number" id="dhuha" placeholder="Rakaat" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🤲</span> Witir/Istikh</label>
+            <input type="number" id="istikhoroh" placeholder="Rakaat" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🌿</span> Puasa</label>
+            <input type="number" id="puasa" placeholder="Hari" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">📖</span> Tilawah (Hal)</label>
+            <input type="number" id="tilawah" placeholder="Halaman" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">💛</span> Sedekah</label>
+            <input type="number" id="sedekah" placeholder="Nominal" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">📿</span> Dzikir Al-Ma'tsurat</label>
+            <input type="number" id="dzikir" placeholder="x/pekan" min="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="licon">🏃</span> Olahraga</label>
+            <input type="number" id="olahraga" placeholder="Menit" min="0">
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Keluh Kesah</span></div>
+        <div class="form-group">
+          <label class="form-label"><span class="licon">💬</span> Curhatan Kamu</label>
+          <textarea id="keluh" rows="3" placeholder="Tuliskan di sini, Allah selalu mendengar..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" id="btnKirim" onclick="kirim()">
+          <span>Kirim Laporan</span>
+        </button>
+        <button class="btn btn-secondary" onclick="prevStep()" style="margin-top:10px">
+          ← Kembali
+        </button>
+      </div>
+    </div>
+
+    <!-- ============ SUCCESS PAGE ============ -->
+    <div id="successPage" class="card">
+      <div class="success-header">
+        <div class="check-ring">✔</div>
+        <h2>Jazakallahu Khairan! 🌿</h2>
+        <p>Laporan amalanmu telah tercatat</p>
+      </div>
+      <div class="card-body">
+
+        <div class="quote-box" id="quoteBox">Memuat motivasi...</div>
+
+        <div class="chart-section">
+          <div class="chart-title">Grafik Ibadahmu Bulan Ini</div>
+          <p id="chartLoading" class="loading-text" style="text-align:center">⏳ Memuat data grafik...</p>
+
+          <div class="chart-wrap" id="lineWrap" style="display:none">
+            <canvas id="lineChart"></canvas>
+          </div>
+
+          <div class="chart-wrap" id="radarWrap" style="display:none">
+            <canvas id="radarChart"></canvas>
+          </div>
+
+          <div class="gemini-box" id="geminiBox" style="display:none">
+            <div class="gemini-label">
+              <div class="dot"></div> Analisis Gemini AI
+            </div>
+            <div class="gemini-text" id="geminiText">Menganalisis pola ibadahmu...</div>
+          </div>
+        </div>
+
+        <div class="ornament">✦ · ✦ · ✦</div>
+
+        <button class="btn btn-primary" onclick="location.reload()">
+          <span>Isi Laporan Lain 🔄</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end page-wrap -->
+
+  <footer class="site-footer">
+    <span class="f-pattern">◆ ◇ ◆ ◇ ◆</span>
+    <p>Dibuat dengan ❤️ oleh <strong>LDK KISI 2026</strong></p>
+    <p style="margin-top:3px"><small>Universitas Siliwangi · Tasikmalaya · 🇵🇸</small></p>
+  </footer>
+
+  <script>
+    // --- MULAI PASTE DARI SINI ---
+    // Inisialisasi saat halaman dibuka
+    window.onload = function() {
+        initData();
+    };
+
+    function initData() {
+        const bSel = document.getElementById('bulan');
+        fetch('/api/initial-data')
+            .then(res => res.json())
+            .then(data => {
+                bSel.innerHTML = '';
+                data.daftarBulan.forEach(b => {
+                    let opt = document.createElement('option');
+                    opt.value = opt.text = b;
+                    if (b === data.bulanSekarang) opt.selected = true;
+                    bSel.add(opt);
+                });
+                loadNama();
+            });
+    }
+
+    function loadNama() {
+        const b = document.getElementById('bulan').value;
+        const p = document.getElementById('pekan').value;
+        const nSel = document.getElementById('nama');
+        nSel.innerHTML = '<option>⏳ Memuat...</option>';
+
+        fetch(`/api/daftar-nama?bulan=${b}&pekan=${p}`)
+            .then(res => res.json())
+            .then(data => {
+                nSel.innerHTML = '';
+                data.forEach(n => {
+                    let opt = document.createElement('option');
+                    opt.value = opt.text = n;
+                    nSel.add(opt);
+                });
+            });
+    }
+
+    function nextStep() {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
+        updateStepUI(2);
+    }
+
+    function prevStep() {
+        document.getElementById('step2').style.display = 'none';
+        document.getElementById('step1').style.display = 'block';
+        updateStepUI(1);
+    }
+
+    function kirim() {
+        const btn = document.getElementById('btnKirim');
+        btn.disabled = true;
+        btn.innerHTML = 'Sedang Mengirim...';
+
+        const payload = {
+            bulan: document.getElementById('bulan').value,
+            pekan: document.getElementById('pekan').value,
+            nama: document.getElementById('nama').value,
+            subuh: document.getElementById('subuh').value || 0,
+            dzuhur: document.getElementById('dzuhur').value || 0,
+            ashar: document.getElementById('ashar').value || 0,
+            magrib: document.getElementById('magrib').value || 0,
+            isya: document.getElementById('isya').value || 0,
+            tahajjud: document.getElementById('tahajjud').value || 0,
+            dhuha: document.getElementById('dhuha').value || 0,
+            istikhoroh: document.getElementById('istikhoroh').value || 0,
+            puasa: document.getElementById('puasa').value || 0,
+            tilawah: document.getElementById('tilawah').value || 0,
+            sedekah: document.getElementById('sedekah').value || 0,
+            dzikir: document.getElementById('dzikir').value || 0,
+            olahraga: document.getElementById('olahraga').value || 0,
+            keluh: document.getElementById('keluh').value || "-"
+        };
+
+        fetch('/api/simpan', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === 'Sukses') {
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('successPage').style.display = 'block';
+                document.getElementById('quoteBox').innerText = res.motivasi;
+                updateStepUI(3);
+            } else {
+                alert("Error: " + res.msg);
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function updateStepUI(step) {
+        // Logika update dot indicator kamu tetap sama
+        const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+        dots.forEach((d, i) => {
+            d.classList.toggle('active', i + 1 === step);
+            d.classList.toggle('done', i + 1 < step);
+        });
+    }
+  </script>
+</body>
+</html>
