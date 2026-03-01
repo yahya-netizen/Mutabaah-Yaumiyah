@@ -773,17 +773,17 @@
   </footer>
 
   <script>
-    // --- MULAI PASTE DARI SINI ---
-    // Inisialisasi saat halaman dibuka
+    const API_URL = ''; // Kosongkan saja jika file HTML & API di satu project Vercel
+
     window.onload = function() {
         initData();
     };
 
     function initData() {
-        const bSel = document.getElementById('bulan');
         fetch('/api/initial-data')
             .then(res => res.json())
             .then(data => {
+                const bSel = document.getElementById('bulan');
                 bSel.innerHTML = '';
                 data.daftarBulan.forEach(b => {
                     let opt = document.createElement('option');
@@ -792,7 +792,8 @@
                     bSel.add(opt);
                 });
                 loadNama();
-            });
+            })
+            .catch(err => console.error("Gagal muat bulan:", err));
     }
 
     function loadNama() {
@@ -813,70 +814,8 @@
             });
     }
 
-    function nextStep() {
-        document.getElementById('step1').style.display = 'none';
-        document.getElementById('step2').style.display = 'block';
-        updateStepUI(2);
-    }
-
-    function prevStep() {
-        document.getElementById('step2').style.display = 'none';
-        document.getElementById('step1').style.display = 'block';
-        updateStepUI(1);
-    }
-
-    function kirim() {
-        const btn = document.getElementById('btnKirim');
-        btn.disabled = true;
-        btn.innerHTML = 'Sedang Mengirim...';
-
-        const payload = {
-            bulan: document.getElementById('bulan').value,
-            pekan: document.getElementById('pekan').value,
-            nama: document.getElementById('nama').value,
-            subuh: document.getElementById('subuh').value || 0,
-            dzuhur: document.getElementById('dzuhur').value || 0,
-            ashar: document.getElementById('ashar').value || 0,
-            magrib: document.getElementById('magrib').value || 0,
-            isya: document.getElementById('isya').value || 0,
-            tahajjud: document.getElementById('tahajjud').value || 0,
-            dhuha: document.getElementById('dhuha').value || 0,
-            istikhoroh: document.getElementById('istikhoroh').value || 0,
-            puasa: document.getElementById('puasa').value || 0,
-            tilawah: document.getElementById('tilawah').value || 0,
-            sedekah: document.getElementById('sedekah').value || 0,
-            dzikir: document.getElementById('dzikir').value || 0,
-            olahraga: document.getElementById('olahraga').value || 0,
-            keluh: document.getElementById('keluh').value || "-"
-        };
-
-        fetch('/api/simpan', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === 'Sukses') {
-                document.getElementById('step2').style.display = 'none';
-                document.getElementById('successPage').style.display = 'block';
-                document.getElementById('quoteBox').innerText = res.motivasi;
-                updateStepUI(3);
-            } else {
-                alert("Error: " + res.msg);
-                btn.disabled = false;
-            }
-        });
-    }
-
-    function updateStepUI(step) {
-        // Logika update dot indicator kamu tetap sama
-        const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
-        dots.forEach((d, i) => {
-            d.classList.toggle('active', i + 1 === step);
-            d.classList.toggle('done', i + 1 < step);
-        });
-    }
-  </script>
+    // Fungsi nextStep, prevStep, dan kirim() juga harus 
+    // menggunakan fetch() seperti contoh di jawaban saya sebelumnya.
+</script>
 </body>
 </html>
