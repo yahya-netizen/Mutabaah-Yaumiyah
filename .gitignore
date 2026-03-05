@@ -1,3 +1,4 @@
 node_modules/
 .env
-*.json
+mutabaah-system-2768b6685af0.json
+# json patterns removed to allow package.json etc.

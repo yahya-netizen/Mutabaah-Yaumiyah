@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus+Jakarta+Sans', sans-serif; background-color: #f0fdf4; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f0fdf4; }
         .active { display: block !important; }
-        .hidden { display: none; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -19,6 +19,7 @@
             <p class="text-green-100 opacity-80">LDK KISI Universitas Siliwangi</p>
         </div>
 
+        <!-- STEP 1: PILIH IDENTITAS -->
         <div id="step1" class="p-6 active">
             <div class="space-y-4">
                 <div>
@@ -47,21 +48,55 @@
             </div>
         </div>
 
+        <!-- STEP 2: ISI AMALAN -->
         <div id="step2" class="p-6 hidden">
-            <h2 class="font-bold text-lg mb-4 text-green-800">Isi Amalan: <span id="displayNama"></span></h2>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="font-bold text-lg text-green-800">Isi Amalan: <span id="displayNama" class="text-green-600"></span></h2>
+                <button onclick="kembali()" class="text-sm text-gray-500 underline">Ganti Nama</button>
+            </div>
+            
             <div class="grid grid-cols-2 gap-4">
-                <div class="col-span-2">
-                    <label class="block text-xs font-bold text-gray-500 uppercase">Shalat Subuh (0-7)</label>
-                    <input type="number" id="subuh" value="0" class="w-full p-2 border rounded">
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Subuh (0-7)</label>
+                    <input type="number" id="subuh" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Dzuhur (0-7)</label>
+                    <input type="number" id="dzuhur" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Ashar (0-7)</label>
+                    <input type="number" id="ashar" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Magrib (0-7)</label>
+                    <input type="number" id="magrib" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Isya (0-7)</label>
+                    <input type="number" id="isya" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Tahajjud (0-7)</label>
+                    <input type="number" id="tahajjud" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Dhuha (0-7)</label>
+                    <input type="number" id="dhuha" value="0" min="0" max="7" class="w-full p-2 border rounded">
+                </div>
+                <div class="col-span-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase">Tilawah (Hal)</label>
+                    <input type="number" id="tilawah" value="0" min="0" class="w-full p-2 border rounded">
                 </div>
                 <div class="col-span-2">
                     <label class="block text-xs font-bold text-gray-500 uppercase">Curhatan Kamu</label>
                     <textarea id="keluh" class="w-full p-2 border rounded" placeholder="Allah selalu mendengar..."></textarea>
                 </div>
             </div>
-            <button id="btnKirim" onclick="kirim()" class="w-full mt-6 bg-green-700 text-white py-4 rounded-xl font-bold">Kirim Mutabaah</button>
+            <button id="btnKirim" onclick="kirim()" class="w-full mt-6 bg-green-700 hover:bg-green-800 text-white py-4 rounded-xl font-bold transition-all">Kirim Mutabaah</button>
         </div>
 
+        <!-- STEP 3: BERHASIL -->
         <div id="step3" class="p-10 text-center hidden">
             <div class="text-5xl mb-4">✅</div>
             <h2 class="text-2xl font-bold text-green-800">Berhasil Dikirim!</h2>
@@ -71,12 +106,10 @@
     </div>
 
     <script>
-        // FUNGSI UTAMA UNTUK VERCEL
         window.onload = () => initData();
 
         async function initData() {
             try {
-                // Gunakan path relatif '/api/...' agar Vercel otomatis mengarah ke folder api
                 const res = await fetch('/api/initial-data');
                 const data = await res.json();
                 
@@ -102,14 +135,18 @@
             nSel.innerHTML = '<option>⏳ Memuat nama...</option>';
 
             try {
-                const res = await fetch(`/api/daftar-nama?bulan=${b}&pekan=${p}`);
+                const res = await fetch(`/api/daftar-nama?bulan=${encodeURIComponent(b)}&pekan=${p}`);
                 const data = await res.json();
                 nSel.innerHTML = '';
-                data.forEach(n => {
-                    let opt = document.createElement('option');
-                    opt.value = opt.text = n;
-                    nSel.add(opt);
-                });
+                if (data.length === 0) {
+                    nSel.innerHTML = '<option disabled>Data nama tidak ditemukan</option>';
+                } else {
+                    data.forEach(n => {
+                        let opt = document.createElement('option');
+                        opt.value = opt.text = n;
+                        nSel.add(opt);
+                    });
+                }
             } catch (err) {
                 nSel.innerHTML = '<option>Error memuat nama</option>';
             }
@@ -117,10 +154,16 @@
 
         function lanjut() {
             const nama = document.getElementById('nama').value;
-            if(!nama || nama.includes("Memuat")) return alert("Pilih nama dulu!");
+            if(!nama || nama.includes("Memuat") || nama.includes("tidak ditemukan")) return alert("Pilih nama dulu!");
             document.getElementById('displayNama').innerText = nama;
-            document.getElementById('step1').classList.remove('active');
-            document.getElementById('step2').classList.add('active');
+            
+            document.getElementById('step1').classList.replace('active', 'hidden');
+            document.getElementById('step2').classList.replace('hidden', 'active');
+        }
+
+        function kembali() {
+            document.getElementById('step2').classList.replace('active', 'hidden');
+            document.getElementById('step1').classList.replace('hidden', 'active');
         }
 
         async function kirim() {
@@ -133,8 +176,14 @@
                 pekan: document.getElementById('pekan').value,
                 nama: document.getElementById('nama').value,
                 subuh: document.getElementById('subuh').value || 0,
+                dzuhur: document.getElementById('dzuhur').value || 0,
+                ashar: document.getElementById('ashar').value || 0,
+                magrib: document.getElementById('magrib').value || 0,
+                isya: document.getElementById('isya').value || 0,
+                tahajjud: document.getElementById('tahajjud').value || 0,
+                dhuha: document.getElementById('dhuha').value || 0,
+                tilawah: document.getElementById('tilawah').value || 0,
                 keluh: document.getElementById('keluh').value || "-"
-                // Tambahkan field lain di sini sesuai server.js
             };
 
             try {
@@ -145,8 +194,8 @@
                 });
                 const result = await res.json();
                 if(result.status === "Sukses") {
-                    document.getElementById('step2').classList.remove('active');
-                    document.getElementById('step3').classList.add('active');
+                    document.getElementById('step2').classList.replace('active', 'hidden');
+                    document.getElementById('step3').classList.replace('hidden', 'active');
                     document.getElementById('quoteBox').innerText = result.motivasi;
                 } else {
                     alert("Gagal: " + result.msg);
@@ -156,6 +205,7 @@
             } catch (err) {
                 alert("Error koneksi!");
                 btn.disabled = false;
+                btn.innerText = "Kirim Mutabaah";
             }
         }
     </script>
