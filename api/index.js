@@ -51,17 +51,18 @@ app.get('/api/daftar-nama', async (req, res) => {
     if(!sheet) return res.json([]);
     
     const startRow = _getStartRow(pekan);
-    // Batasi pembacaan sel agar lebih cepat (31 baris untuk nama)
+    const endRow = sheet.rowCount;
     await sheet.loadCells({
-        startRowIndex: startRow - 1, endRowIndex: startRow + 31,
+        startRowIndex: startRow - 1, endRowIndex: endRow,
         startColumnIndex: 1, endColumnIndex: 2
     });
     
     let daftarNama = [];
-    for (let i = 0; i < 31; i++) {
-      let cell = sheet.getCell(startRow - 1 + i, 1);
+    for (let i = startRow - 1; i < endRow; i++) {
+      let cell = sheet.getCell(i, 1);
       let val = cell.value;
-      if (val && val !== "Nama Lengkap" && val !== "Jabatan") {
+      if (!val || val.toString().trim() === "") break;
+      if (val !== "Nama Lengkap" && val !== "Jabatan") {
         daftarNama.push(val.toString().trim());
       }
     }
@@ -85,16 +86,18 @@ app.post('/api/simpan', async (req, res) => {
     if (!sheet) return res.status(404).json({ status: "Error", msg: "Sheet bulan tidak ditemukan" });
 
     const startRow = _getStartRow(data.pekan);
+    const endRow = sheet.rowCount;
     await sheet.loadCells({
-        startRowIndex: startRow - 1, endRowIndex: startRow + 31,
+        startRowIndex: startRow - 1, endRowIndex: endRow,
         startColumnIndex: 1, endColumnIndex: 2
     });
 
     let rowIdx = -1;
-    for (let i = 0; i < 31; i++) {
-      const cellVal = sheet.getCell(startRow - 1 + i, 1).value;
-      if (cellVal && cellVal.toString().trim() === data.nama.trim()) {
-          rowIdx = startRow - 1 + i; 
+    for (let i = startRow - 1; i < endRow; i++) {
+      const cellVal = sheet.getCell(i, 1).value;
+      if (!cellVal || cellVal.toString().trim() === "") break;
+      if (cellVal.toString().trim() === data.nama.trim()) {
+          rowIdx = i;
           break;
       }
     }
